@@ -18,3 +18,4 @@ test_script:
   - sleep 10  # даем приложению время на запуск
   # Запускаем тесты
   - ./gradlew test --info
+
