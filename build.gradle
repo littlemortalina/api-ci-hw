@@ -6,19 +6,27 @@ group 'ru.netology'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 11
+targetCompatibility = 11
+
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
+    // Добавляем альтернативные репозитории для надежности
+    maven { url 'https://repo1.maven.org/maven2/' }
 }
 
 dependencies {
-    testImplementation 'io.rest-assured:rest-assured:5.3.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
-    testImplementation 'io.rest-assured:json-schema-validator:5.3.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2' // Более новая стабильная версия
+    testImplementation 'io.rest-assured:rest-assured:5.3.1'
+    testImplementation 'io.rest-assured:json-schema-validator:5.3.1'
 }
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+    }
 }

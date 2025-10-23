@@ -7,20 +7,23 @@ branches:
 
 build: off
 
+cache:
+  - '%USERPROFILE%\.gradle\caches'
+
 install:
   - chmod +x gradlew
-  # Полная очистка Gradle кеша
-  - rm -rf ~/.gradle/caches/
-  - rm -rf ~/.gradle/daemon/
-  - rm -f ~/.gradle/gradle.properties
+  # Умеренная очистка - только проблемных зависимостей
+  - rm -rf ~/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/
+  - rm -rf ~/.gradle/caches/modules-2/files-2.1/io.rest-assured/
 
-  # Очистка проекта
-  - ./gradlew clean
+  # Обновляем сертификаты (может помочь с SSL)
+  - sudo apt-get update
+  - sudo apt-get install -y ca-certificates
 
-  # Скачивание зависимостей с повторными попытками
-  - for i in {1..3}; do ./gradlew dependencies --refresh-dependencies --no-daemon && break || sleep 15; done
+  # Скачивание зависимостей с подробным выводом
+  - ./gradlew dependencies --refresh-dependencies --no-daemon --info
 
 test_script:
   - java -jar ./artifacts/app-mbank.jar &
-  - sleep 25
-  - ./gradlew test --info --no-daemon
+  - sleep 30
+  - ./gradlew clean test --info --no-daemon
