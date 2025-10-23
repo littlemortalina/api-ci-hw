@@ -1,4 +1,4 @@
-image: Ubuntu2004
+image: Ubuntu2204
 stack: jdk 11
 
 branches:
@@ -9,11 +9,18 @@ build: off
 
 install:
   - chmod +x gradlew
-  # Пробуем несколько раз скачать зависимости
-  - for i in {1..3}; do ./gradlew dependencies --refresh-dependencies && break || sleep 10; done
+  # Полная очистка Gradle кеша
+  - rm -rf ~/.gradle/caches/
+  - rm -rf ~/.gradle/daemon/
+  - rm -f ~/.gradle/gradle.properties
+
+  # Очистка проекта
+  - ./gradlew clean
+
+  # Скачивание зависимостей с повторными попытками
+  - for i in {1..3}; do ./gradlew dependencies --refresh-dependencies --no-daemon && break || sleep 15; done
 
 test_script:
   - java -jar ./artifacts/app-mbank.jar &
-  - sleep 15
-  - ./gradlew test --info
-
+  - sleep 25
+  - ./gradlew test --info --no-daemon
