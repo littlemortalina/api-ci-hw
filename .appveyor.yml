@@ -9,13 +9,11 @@ build: off
 
 install:
   - chmod +x gradlew
-  # Сначала даем Gradle скачать все зависимости
-  - ./gradlew dependencies --refresh-dependencies
+  # Пробуем несколько раз скачать зависимости
+  - for i in {1..3}; do ./gradlew dependencies --refresh-dependencies && break || sleep 10; done
 
 test_script:
-  # Запускаем приложение в фоне
   - java -jar ./artifacts/app-mbank.jar &
-  - sleep 10  # даем приложению время на запуск
-  # Запускаем тесты
+  - sleep 15
   - ./gradlew test --info
 
